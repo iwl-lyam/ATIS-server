@@ -88,10 +88,19 @@ def generate_audio():
     wind_speed = data["wind"][3:5]
     temp = data["temperatureDewPoint"].split("/")[0]
     dew_point = data["temperatureDewPoint"].split("/")[1]
+    departure_runway = data["departureRunway"].replace("L", " LEFT").replace("R", " RIGHT")
+    arrival_runway = ""
+    if data["arrivalRunway"]:
+        arrival_runway = data["arrivalRunway"].replace("L", " LEFT").replace("R", " RIGHT")
+
 
     prompt_text = f"""THISIS {data["airport"]} INFO {data["letter"]} AUTOMATIC TIME {data["time"]}Z.
-RWYINUSE {data["arrivalRunway"]}.
-SURFACEWINDS {wind_dir} DEGREES AT {wind_speed} KNOTS VISIBILITY {data["visibility"]} {data["cloudLayer"]} TEMPERATURE {temp} DEGREES DEWPOINT {dew_point} DEGREES QNH {data["qnh"]} HECTOPASCALS.
+"""
+    if (departure_runway != arrival_runway) and arrival_runway:
+        prompt_text += f"DEP RWY {departure_runway} ARR RWY {arrival_runway}."
+    else:
+        prompt_text += f"RWYINUSE {departure_runway}."
+    prompt_text += f"""SURFACEWINDS {wind_dir} DEGREES AT {wind_speed} KNOTS VISIBILITY {data["visibility"]} {data["cloudLayer"]} TEMPERATURE {temp} DEGREES DEWPOINT {dew_point} DEGREES QNH {data["qnh"]} HECTOPASCALS.
 TRANSITIONLEVEL FL{data["transitionLevel"]}.
 ACKNOWLEDGE {data["letter"]} ADVISEACFTTYPE ONFIRSTCONTACT WITH ${data["airport"]}."""
 
@@ -106,4 +115,5 @@ ACKNOWLEDGE {data["letter"]} ADVISEACFTTYPE ONFIRSTCONTACT WITH ${data["airport"
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, ssl_context=("/etc/letsencrypt/live/itwithlyam.co.uk/fullchain.pem", "/etc/letsencrypt/live/itwithlyam.co.uk/privkey.pem"))
+    app.run(host="0.0.0.0", port=5000)
+#, ssl_context=("/etc/letsencrypt/live/itwithlyam.co.uk/fullchain.pem", "/etc/letsencrypt/live/itwithlyam.co.uk/privkey.pem")
