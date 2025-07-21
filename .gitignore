@@ -6,3 +6,4 @@ library
 *.wav
 pyvenv.cfg
 __pycache__/
+lib/
