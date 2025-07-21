@@ -106,4 +106,4 @@ ACKNOWLEDGE {data["letter"]} ADVISEACFTTYPE ONFIRSTCONTACT WITH ${data["airport"
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=5000, ssl_context=("/etc/letsencrypt/live/itwithlyam.co.uk/fullchain.pem", "/etc/letsencrypt/live/itwithlyam.co.uk/privkey.pem"))
