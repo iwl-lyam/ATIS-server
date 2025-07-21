@@ -7,3 +7,4 @@ library
 pyvenv.cfg
 __pycache__/
 lib/
+lib 2/
