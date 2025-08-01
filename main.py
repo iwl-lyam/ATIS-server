@@ -76,6 +76,17 @@ def compile_wav_files(tokens, mapping, output_path):
                 seg = seg.set_sample_width(common_sample_width)
                 seg = seg.set_channels(common_channels)
                 final_audio += seg + silence_gap
+            else:
+                audio_path = os.path.join(AUDIO_DIR, f"{token.lower()}.wav")
+                if os.path.isfile(audio_path):
+                    seg = AudioSegment.from_wav(audio_path)
+                    seg = trim_silence(seg)
+                    seg = seg.set_frame_rate(common_frame_rate)
+                    seg = seg.set_sample_width(common_sample_width)
+                    seg = seg.set_channels(common_channels)
+                    final_audio += seg + silence_gap
+                else:
+                    raise Exception(f"Audio file for token '{token}' not found in mapping or directory.")
 
     final_audio.export(output_path, format="wav")
 
@@ -124,5 +135,6 @@ ACKNOWLEDGE {data["letter"]} ADVISEACFTTYPE ONFIRSTCONTACT WITH ${data["airport"
 
 
 if __name__ == "__main__":
+    # app.run(host="0.0.0.0", port=5000, debug=True)
     app.run(host="0.0.0.0", port=5000, ssl_context=("/etc/letsencrypt/live/itwithlyam.co.uk/fullchain.pem", "/etc/letsencrypt/live/itwithlyam.co.uk/privkey.pem"))
-#, ssl_context=("/etc/letsencrypt/live/itwithlyam.co.uk/fullchain.pem", "/etc/letsencrypt/live/itwithlyam.co.uk/privkey.pem")
+    
